@@ -1,5 +1,7 @@
 package MyDSA.BinaryTree.BST;
 
+import java.util.ArrayList;
+
 public class BinarySearchTree {
     static class Node{
         int data;
@@ -30,6 +32,29 @@ public class BinarySearchTree {
         System.out.println();
         int k1 = 6,k2 = 12;
         printInRange(root,k1,k2);
+        System.out.println("\nAll Paths from root to leafs are :");
+        printPathRootToLeaf(root, new ArrayList<>());
+    }
+
+    private static void printPathRootToLeaf(Node root, ArrayList<Integer> path) {
+        if(root == null){
+            return;
+        }
+        path.add(root.data);
+        if(root.left == null && root.right == null){
+            printPath(path);
+        }
+        printPathRootToLeaf(root.left,path);
+        printPathRootToLeaf(root.right,path);
+        path.remove(path.size()-1);
+
+    }
+
+    private static void printPath(ArrayList<Integer> path) {
+        for(int x : path){
+            System.out.print(x+" ");
+        }
+        System.out.println();
     }
 
     private static void printInRange(Node root, int k1, int k2) {
