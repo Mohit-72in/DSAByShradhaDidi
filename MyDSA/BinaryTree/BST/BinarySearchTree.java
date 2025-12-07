@@ -1,6 +1,9 @@
 package MyDSA.BinaryTree.BST;
 
+import MyDSA.BinaryTree.SubTree;
+
 import java.util.ArrayList;
+
 
 public class BinarySearchTree {
     static class Node{
@@ -34,6 +37,53 @@ public class BinarySearchTree {
         printInRange(root,k1,k2);
         System.out.println("\nAll Paths from root to leafs are :");
         printPathRootToLeaf(root, new ArrayList<>());
+        System.out.println();
+        if(isValidateBST(root,null,null)){
+            System.out.println("Valid BST");
+        }else{
+            System.out.println("NOT VALID BST");
+        }
+        preorder(root);
+        System.out.println();
+        root = createMirrorImageBST(root);
+        preorder(root);
+    }
+
+    private static Node createMirrorImageBST(Node root) {
+        //base case if root == null return null
+        if(root == null){
+            return null;
+        }
+        Node leftSubtree = createMirrorImageBST(root.left);
+        Node rightSubTree = createMirrorImageBST(root.right);
+        //swap
+        root.left = rightSubTree;
+        root.right = leftSubtree;
+        return root;
+    }
+
+    private static void preorder(Node root) {
+        if (root != null) {
+            System.out.print(root.data + " ");
+            preorder(root.left);
+            preorder(root.right);
+        }
+    }
+    private static boolean isValidateBST(Node root, Node min, Node  max) {
+        //Base CAse: root == null then null is consider as valid BST so return true
+        if(root == null){
+            return true;
+        }
+        // check root.data < minNode.data then it invalidate BST property
+        if(min != null && root.data < min.data){
+            return false;
+        }
+        // check root.data > maxNode.data then it invalidate BST property
+        if(max != null && root.data > max.data){
+            return false;
+        }
+        // if root follow all the property then time to check for its left and right subtree
+        return isValidateBST(root.left,min,root) && isValidateBST(root.right,root,max);
     }
 
     private static void printPathRootToLeaf(Node root, ArrayList<Integer> path) {
