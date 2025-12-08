@@ -1,50 +1,54 @@
 package MyDSA.BinaryTree;
 import java.util.*;
+
 public class DuplicateSubTreeinBT {
-    static HashMap<String,Integer> hm;
+
+    static HashMap<String, Integer> hm;
+
     static class Node {
         int data;
-        Node left;
-        Node right;
-
+        Node left, right;
         Node(int data) {
             this.data = data;
         }
     }
-    static String inOrder(Node node){
-        if(node == null){
-            return "";
-        }
-        String str = "(";
-        str += inOrder(node.left);
-        str += Integer.toString(node.data);
-        str += inOrder(node.right);
-        str += ")";
 
-        if(hm.get(str) != null && hm.get(str) == 1)
-            System.out.println(node.data+ " ");
-        if(hm.containsKey(str))
-            hm.put(str,hm.get(str)+1);
-        else
-            hm.put(str,1);
+    // Use POSTORDER to uniquely identify subtrees
+    static String serialize(Node root) {
+        if (root == null) return "#";
+
+        String left = serialize(root.left);
+        String right = serialize(root.right);
+        String str = root.data + "," + left + "," + right;
+
+        hm.put(str, hm.getOrDefault(str, 0) + 1);
+
+        // Print only the FIRST time the duplicate appears
+        if (hm.get(str) == 2) {
+            System.out.println("Duplicate Subtree Root: " + root.data);
+        }
+
         return str;
     }
-    static void printAllDups(Node root){
+
+    static void printAllDups(Node root) {
         hm = new HashMap<>();
-        inOrder(root);
+        serialize(root);
     }
 
     public static void main(String[] args) {
-        Node root = null;
-        root = new Node(1);
+
+        Node root = new Node(1);
         root.left = new Node(2);
         root.right = new Node(3);
+
         root.left.left = new Node(4);
+
         root.right.left = new Node(2);
         root.right.left.left = new Node(4);
+
         root.right.right = new Node(4);
+
         printAllDups(root);
     }
-
-
 }
